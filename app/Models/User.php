@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'birth_date'
     ];
 
     /**
@@ -43,5 +44,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function channels()
+    {
+        return $this->belongsToMany(Channel::class, 'channel_user');
+    }
+
+    public function organizations()
+    {
+        return $this->belongsToMany(Organization::class, 'organization_user');
+    }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_user');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'author_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'assignee_id');
     }
 }
