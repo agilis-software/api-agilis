@@ -1,0 +1,43 @@
+post:
+  summary: Login de Usuário
+  description: Faz login um novo usuário na plataforma e retorna um token de acesso.
+  tags:
+    - Authorization
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+              example: "joao.silva@example.com"
+            password:
+              type: string
+              example: "password123"
+          required:
+            - email
+            - password
+  responses:
+    "200":
+      description: Credenciais do usuário corretas
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: "1|eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVC"
+                  token_type:
+                    type: string
+                    example: "Bearer"
+    "400":
+      description: Solicitação inválida
+    "422":
+      description: Dados fornecidos não são válidos

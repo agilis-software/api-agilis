@@ -1,0 +1,54 @@
+post:
+  summary: Registro de Usuário
+  description: Registra um novo usuário na plataforma e retorna um token de acesso.
+  tags:
+    - Authorization
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              maxLength: 255
+              example: "João da Silva"
+            email:
+              type: string
+              format: email
+              maxLength: 255
+              example: "joao.silva@example.com"
+            password:
+              type: string
+              minLength: 8
+              example: "password123"
+            birth_date:
+              type: string
+              format: date
+              example: "1990-01-01"
+          required:
+            - name
+            - email
+            - password
+  responses:
+    "201":
+      description: Usuário registrado com sucesso
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  token_type:
+                    type: string
+                    example: "Bearer"
+    "400":
+      description: Solicitação inválida
+    "422":
+      description: Dados fornecidos não são válidos

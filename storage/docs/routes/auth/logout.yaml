@@ -1,0 +1,12 @@
+post:
+  summary: Logout do Usuário
+  description: Revoga o token de autenticação do usuário, encerrando a sessão atual.
+  tags:
+    - Authorization
+  security:
+    - bearerAuth: []
+  responses:
+    "204":
+      description: Logout bem-sucedido. O token foi revogado e a sessão foi encerrada.
+    "401":
+      description: Não autorizado. O token fornecido é inválido ou não está presente.

@@ -1,0 +1,15 @@
+openapi: 3.0.0
+info:
+  title: Agilis API
+  description:
+    Agilis é uma plataforma de gestão de times de programação, permitindo
+    atribuir tarefas e comunicar-se com os colaboradores em um único aplicativo web.
+    Esta API fornece acesso aos recursos e funcionalidades da plataforma Agilis.
+  version: 1.0.0
+paths:
+  /register:
+    $ref: "./routes/auth/register.yaml"
+  /login:
+    $ref: "./routes/auth/login.yaml"
+  /logout:
+    $ref: "./routes/auth/logout.yaml"
