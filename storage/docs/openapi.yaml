@@ -7,9 +7,9 @@ info:
     Esta API fornece acesso aos recursos e funcionalidades da plataforma Agilis.
   version: 1.0.0
 paths:
-  /register:
+  /api/register:
     $ref: "./routes/auth/register.yaml"
-  /login:
+  /api/login:
     $ref: "./routes/auth/login.yaml"
-  /logout:
+  /api/logout:
     $ref: "./routes/auth/logout.yaml"

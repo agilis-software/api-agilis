@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Swagger UI</title>
+  <title>Agilis API</title>
   <link rel="stylesheet" type="text/css" href="{{ asset('swagger-ui/swagger-ui.css') }}" />
   <link rel="stylesheet" type="text/css" href="{{ asset('swagger-ui/index.css') }}" />
   <link rel="icon" type="image/png" href="{{ asset('swagger-ui/favicon-32x32.png') }}" sizes="32x32" />
