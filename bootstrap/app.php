@@ -15,5 +15,6 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Always render Exception in JSON Format.
+        $exceptions->shouldRenderJsonWhen(fn () => true);
     })->create();
