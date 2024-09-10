@@ -16,7 +16,7 @@ class AuthResource extends JsonResource
     {
         return [
             'access_token' => $this->plainTextToken,
-            'token_type' => $this->token_type ?? 'Bearer'
+            'token_type' => $this->token_type ?? 'Bearer',
         ];
     }
 }
