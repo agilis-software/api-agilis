@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PasswordUpdateRequest;
+use App\Http\Requests\ProfileDeleteRequest;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\ProfileResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -14,7 +17,9 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        return new UserResource($user);
+        return (new ProfileResource($user))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     public function update(ProfileUpdateRequest $request)
@@ -23,7 +28,18 @@ class ProfileController extends Controller
 
         $user->update($request->validated());
 
-        return new UserResource($user);
+        return (new ProfileResource($user))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
+    }
+
+    public function destroy(ProfileDeleteRequest $request)
+    {
+        $user = Auth::user();
+        $user->delete();
+
+        return response()
+            ->noContent();
     }
 
     public function setAvatar(Request $request)
@@ -33,7 +49,7 @@ class ProfileController extends Controller
         $extension = $avatar->getClientOriginalExtension();
         $avatarName = $user->id.'.'.$extension;
 
-        if ($user->avatar) {
+        if ($user->avatar !== config('agilis.users.avatars.default')) {
             Storage::disk('public')->delete($user->avatar);
         }
 
@@ -42,16 +58,31 @@ class ProfileController extends Controller
         $user->avatar = $avatarPath;
         $user->save();
 
-        return new UserResource($user);
+        return (new ProfileResource($user))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     public function removeAvatar()
     {
         $user = Auth::user();
         $user->update([
-            'avatar' => 'avatars/default.png',
+            'avatar' => config('agilis.users.avatars.default'),
         ]);
 
-        return new UserResource($user);
+        return (new ProfileResource($user))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
+    }
+
+    public function updatePassword(PasswordUpdateRequest $request)
+    {
+        $user = Auth::user();
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()
+            ->noContent();
     }
 }
