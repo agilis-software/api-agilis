@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -25,4 +26,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Rotas para o recurso de usuários
     Route::apiResource('users', UserController::class)
         ->only(['index', 'show']);
+
+    Route::apiResource('organizations', OrganizationController::class);
 });
