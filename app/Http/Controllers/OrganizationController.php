@@ -7,9 +7,11 @@ use App\Http\Requests\OrganizationStoreRequest;
 use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Resources\OrganizationResource;
 use App\Models\Organization;
+use App\Rules\OrganizationOwnerRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class OrganizationController extends Controller
 {
@@ -28,11 +30,14 @@ class OrganizationController extends Controller
      */
     public function store(OrganizationStoreRequest $request)
     {
+        $user = Auth::user();
         $data = $request->validated();
+        $organization = $user->ownOrganizations()->create($data);
+        $organization->refresh();
 
-        $organization = Organization::create($data);
-
-        return new OrganizationResource($organization);
+        return (new OrganizationResource($organization))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -54,6 +59,11 @@ class OrganizationController extends Controller
      */
     public function update(OrganizationUpdateRequest $request, int $id)
     {
+        Validator::make(
+            ['organization_id' => $id],
+            ['organization_id' => ['required', 'exists:organizations,id', new OrganizationOwnerRule]]
+        )->validate();
+
         $data = $request->validated();
 
         $organization = Organization::find($id);
@@ -72,9 +82,12 @@ class OrganizationController extends Controller
      */
     public function destroy(OrganizationDeleteRequest $request, int $id)
     {
-        $organization = Organization::find($id);
+        Validator::make(
+            ['organization_id' => $id],
+            ['organization_id' => ['required', 'exists:organizations,id', new OrganizationOwnerRule]]
+        )->validate();
 
-        abort_unless($organization, 404, 'Not found');
+        $organization = Organization::find($id);
 
         $organization->delete();
 
@@ -84,15 +97,13 @@ class OrganizationController extends Controller
 
     public function setAvatar(Request $request, int $id)
     {
-        $user = Auth::user();
-
         $organization = Organization::find($id);
 
         abort_unless($organization, 404, 'Not found');
 
         $avatar = $request->file('avatar');
         $extension = $avatar->getClientOriginalExtension();
-        $avatarName = $id.'.'.$extension;
+        $avatarName = $id . '.' . $extension;
 
         if ($organization->avatar !== config('agilis.organizations.avatars.default')) {
             Storage::disk('public')->delete($organization->avatar);
@@ -110,7 +121,11 @@ class OrganizationController extends Controller
 
     public function removeAvatar(int $id)
     {
-        $user = Auth::user();
+        Validator::make(
+            ['organization_id' => $id],
+            ['organization_id' => ['required', 'exists:organizations,id', new OrganizationOwnerRule]]
+        )->validate();
+
         $organization = Organization::find($id);
 
         abort_unless($organization, '404', 'Not found');

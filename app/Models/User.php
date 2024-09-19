@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class, 'assignee_id');
     }
+
+    public function ownOrganizations()
+    {
+        return $this->hasMany(Organization::class, 'owner_id');
+    }
 }
