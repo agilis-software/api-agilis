@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string('name', 45);
-            $table->string('description', 45)->nullable();
+            $table->string('description', 255)->nullable();
+            $table->string('avatar')->default(config('agilis.organizations.avatars.default'));
             $table->timestamps();
         });
     }

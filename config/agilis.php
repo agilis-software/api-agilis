@@ -3,8 +3,14 @@
 return [
     'users' => [
         'avatars' => [
-            'folder' => 'avatars',
-            'default' => 'avatars/default.png',
+            'folder' => 'users/avatars',
+            'default' => 'users/avatars/default.png',
+        ],
+    ],
+    'organizations' => [
+        'avatars' => [
+            'folder' => 'organizations/avatars',
+            'default' => 'organizations/avatars/default.png',
         ],
     ],
 ];
