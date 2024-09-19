@@ -15,17 +15,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Rotas para o perfil do usuário autenticado
-    Route::prefix('users/me')->group(function () {
+    Route::prefix('users/me')->name('profile.')->group(function () {
         Route::apiSingleton('/', ProfileController::class)->destroyable();
-        Route::post('avatar', [ProfileController::class, 'setAvatar'])->name('profile.setAvatar');
-        Route::delete('avatar', [ProfileController::class, 'removeAvatar'])->name('profile.removeAvatar');
-
-        Route::put('password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+        Route::post('avatar', [ProfileController::class, 'setAvatar'])->name('setAvatar');
+        Route::delete('avatar', [ProfileController::class, 'removeAvatar'])->name('removeAvatar');
+        Route::put('password', [ProfileController::class, 'updatePassword'])->name('updatePassword');
     });
 
     // Rotas para o recurso de usuários
     Route::apiResource('users', UserController::class)
         ->only(['index', 'show']);
 
+    // Rotas para o recurso de organizações
+    Route::prefix('organizations')->name('organizations.')->group(function () {
+        Route::post('{organization}/avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
+        Route::delete('{organization}/avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
+    });
     Route::apiResource('organizations', OrganizationController::class);
 });

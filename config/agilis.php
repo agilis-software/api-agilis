@@ -10,7 +10,7 @@ return [
     'organizations' => [
         'avatars' => [
             'folder' => 'organizations/avatars',
-            'default' => 'users/avatars/default.png',
+            'default' => 'organizations/avatars/default.png',
         ],
     ],
 ];

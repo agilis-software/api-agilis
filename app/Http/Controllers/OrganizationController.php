@@ -7,6 +7,9 @@ use App\Http\Requests\OrganizationStoreRequest;
 use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Resources\OrganizationResource;
 use App\Models\Organization;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class OrganizationController extends Controller
 {
@@ -69,8 +72,6 @@ class OrganizationController extends Controller
      */
     public function destroy(OrganizationDeleteRequest $request, int $id)
     {
-        $data = $request->validated();
-
         $organization = Organization::find($id);
 
         abort_unless($organization, 404, 'Not found');
@@ -79,5 +80,47 @@ class OrganizationController extends Controller
 
         return response()
             ->noContent();
+    }
+
+    public function setAvatar(Request $request, int $id)
+    {
+        $user = Auth::user();
+
+        $organization = Organization::find($id);
+
+        abort_unless($organization, 404, 'Not found');
+
+        $avatar = $request->file('avatar');
+        $extension = $avatar->getClientOriginalExtension();
+        $avatarName = $id.'.'.$extension;
+
+        if ($organization->avatar !== config('agilis.organizations.avatars.default')) {
+            Storage::disk('public')->delete($organization->avatar);
+        }
+
+        $avatarPath = $avatar->storeAs(config('agilis.organizations.avatars.folder'), $avatarName, 'public');
+
+        $organization->avatar = $avatarPath;
+        $organization->save();
+
+        return (new OrganizationResource($organization))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
+    }
+
+    public function removeAvatar(int $id)
+    {
+        $user = Auth::user();
+        $organization = Organization::find($id);
+
+        abort_unless($organization, '404', 'Not found');
+
+        $organization->update([
+            'avatar' => config('agilis.organizations.avatars.default'),
+        ]);
+
+        return (new OrganizationResource($organization))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 }
