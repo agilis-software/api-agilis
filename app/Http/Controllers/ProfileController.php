@@ -53,7 +53,7 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($user->avatar);
         }
 
-        $avatarPath = $avatar->storeAs('avatars', $avatarName, 'public');
+        $avatarPath = $avatar->storeAs(config('agilis.users.avatars.folder'), $avatarName, 'public');
 
         $user->avatar = $avatarPath;
         $user->save();

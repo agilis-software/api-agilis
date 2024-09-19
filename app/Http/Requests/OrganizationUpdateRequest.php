@@ -11,7 +11,7 @@ class OrganizationUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class OrganizationUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['string', 'max:45'],
+            'description' => ['string', 'max:255', 'nullable'],
         ];
     }
 }

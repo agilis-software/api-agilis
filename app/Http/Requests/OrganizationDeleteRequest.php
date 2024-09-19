@@ -11,7 +11,7 @@ class OrganizationDeleteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class OrganizationDeleteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'password' => ['required', 'string', 'current_password', 'confirmed'],
         ];
     }
 }
