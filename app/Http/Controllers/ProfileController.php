@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PasswordUpdateRequest;
-use App\Http\Requests\ProfileDeleteRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Resources\ProfileResource;
+use App\Services\MediaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -33,8 +33,11 @@ class ProfileController extends Controller
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
-    public function destroy(ProfileDeleteRequest $request)
+    public function destroy(Request $request)
     {
+        $request->validate([
+            'password' => ['required', 'string', 'current_password', 'confirmed'],
+        ]);
         $user = Auth::user();
         $user->delete();
 
@@ -45,18 +48,20 @@ class ProfileController extends Controller
     public function setAvatar(Request $request)
     {
         $user = Auth::user();
-        $avatar = $request->file('avatar');
-        $extension = $avatar->getClientOriginalExtension();
-        $avatarName = $user->id.'.'.$extension;
+
+        $mediaPath = MediaService::saveMedia(
+            $request->file('avatar'),
+            config('agilis.users.avatars.folder'),
+            $user->id
+        );
 
         if ($user->avatar !== config('agilis.users.avatars.default')) {
             Storage::disk('public')->delete($user->avatar);
         }
 
-        $avatarPath = $avatar->storeAs(config('agilis.users.avatars.folder'), $avatarName, 'public');
-
-        $user->avatar = $avatarPath;
-        $user->save();
+        $user->update([
+            'avatar' => $mediaPath,
+        ]);
 
         return (new ProfileResource($user))
             ->response()
@@ -66,6 +71,11 @@ class ProfileController extends Controller
     public function removeAvatar()
     {
         $user = Auth::user();
+
+        if ($user->avatar !== config('agilis.users.avatars.default')) {
+            MediaService::deleteMedia($user->avatar);
+        }
+
         $user->update([
             'avatar' => config('agilis.users.avatars.default'),
         ]);

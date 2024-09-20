@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name', 45);
             $table->string('description', 255)->nullable();
             $table->string('avatar')->default(config('agilis.organizations.avatars.default'));
+            $table->foreignId('owner_id')
+                ->constrained('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }

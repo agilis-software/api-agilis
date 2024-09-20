@@ -28,8 +28,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rotas para o recurso de organizações
     Route::prefix('organizations')->name('organizations.')->group(function () {
-        Route::post('{organization}/avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
-        Route::delete('{organization}/avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
+        Route::post('{organizationId}/avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
+        Route::delete('{organizationId}/avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
     });
     Route::apiResource('organizations', OrganizationController::class);
 });
