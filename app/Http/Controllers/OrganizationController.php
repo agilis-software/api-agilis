@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\OrganizationDeleteRequest;
 use App\Http\Requests\OrganizationStoreRequest;
 use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Resources\OrganizationResource;
 use App\Models\Organization;
 use App\Rules\OrganizationOwnerRule;
+use App\Services\MediaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -80,11 +80,18 @@ class OrganizationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OrganizationDeleteRequest $request, int $id)
+    public function destroy(Request $request, int $id)
     {
         Validator::make(
-            ['organization_id' => $id],
-            ['organization_id' => ['required', 'exists:organizations,id', new OrganizationOwnerRule]]
+            [
+                'password' => $request->password,
+                'password_confirmation' => $request->password_confirmation,
+                'organization_id' => $id,
+            ],
+            [
+                'password' => ['required', 'string', 'current_password', 'confirmed'],
+                'organization_id' => ['required', 'exists:organizations,id', new OrganizationOwnerRule],
+            ]
         )->validate();
 
         $organization = Organization::find($id);
@@ -103,7 +110,7 @@ class OrganizationController extends Controller
 
         $avatar = $request->file('avatar');
         $extension = $avatar->getClientOriginalExtension();
-        $avatarName = $id . '.' . $extension;
+        $avatarName = $id.'.'.$extension;
 
         if ($organization->avatar !== config('agilis.organizations.avatars.default')) {
             Storage::disk('public')->delete($organization->avatar);
@@ -128,7 +135,9 @@ class OrganizationController extends Controller
 
         $organization = Organization::find($id);
 
-        abort_unless($organization, '404', 'Not found');
+        if ($organization->avatar != config('agilis.organizations.avatars.default')) {
+            MediaService::deleteMedia($organization->avatar);
+        }
 
         $organization->update([
             'avatar' => config('agilis.organizations.avatars.default'),

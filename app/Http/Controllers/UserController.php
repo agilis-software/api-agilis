@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -16,7 +15,7 @@ class UserController extends Controller
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
-    public function show(Request $request, int $id)
+    public function show(int $id)
     {
         $user = User::find($id);
 
