@@ -20,7 +20,7 @@ class OrganizationOwnerRule implements ValidationRule
 
         $organization = Organization::find($value);
 
-        if ($organization && $organization->owner_id !== $user->id) {
+        if ($organization && ($organization->owner_id !== $user->id)) {
             $fail('You do not own this organization.');
         }
     }
