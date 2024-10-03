@@ -7,7 +7,9 @@ use Laravel\Sanctum\Sanctum;
 
 it('sets the organization avatar successfully', function () {
     $user = User::factory()->create();
-    $organization = Organization::factory()->create();
+    $organization = Organization::factory()->create([
+        'owner_id' => $user->id
+    ]);
     Sanctum::actingAs($user);
 
     $response = $this->post("/api/organizations/{$organization->id}/avatar", [

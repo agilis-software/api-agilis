@@ -47,8 +47,11 @@ class ProfileController extends Controller
 
     public function setAvatar(Request $request)
     {
-        $user = Auth::user();
+        $request->validate([
+            'avatar' => 'required|file|mimes:png,jpeg,jpg|max:4096',
+        ]);
 
+        $user = Auth::user();
         $mediaPath = MediaService::saveMedia(
             $request->file('avatar'),
             config('agilis.users.avatars.folder'),

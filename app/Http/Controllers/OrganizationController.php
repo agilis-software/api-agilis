@@ -15,9 +15,6 @@ use Illuminate\Support\Facades\Validator;
 
 class OrganizationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return OrganizationResource::collection(Organization::paginate(5))
@@ -25,9 +22,6 @@ class OrganizationController extends Controller
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(OrganizationStoreRequest $request)
     {
         $user = Auth::user();
@@ -40,9 +34,6 @@ class OrganizationController extends Controller
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(int $id)
     {
         $organization = Organization::find($id);
@@ -54,9 +45,6 @@ class OrganizationController extends Controller
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(OrganizationUpdateRequest $request, int $id)
     {
         Validator::make(
@@ -77,9 +65,6 @@ class OrganizationController extends Controller
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request, int $id)
     {
         Validator::make(
@@ -104,9 +89,18 @@ class OrganizationController extends Controller
 
     public function setAvatar(Request $request, int $id)
     {
+        Validator::make(
+            ['organization_id' => $id],
+            ['organization_id' => ['required', 'exists:organizations,id', new OrganizationOwnerRule]]
+        )->validate();
+
         $organization = Organization::find($id);
 
         abort_unless($organization, 404, 'Not found');
+
+        $request->validate([
+            'avatar' => 'required|file|mimes:png,jpeg,jpg|max:4096',
+        ]);
 
         $avatar = $request->file('avatar');
         $extension = $avatar->getClientOriginalExtension();
