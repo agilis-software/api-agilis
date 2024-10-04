@@ -1,0 +1,11 @@
+post:
+  summary: Logout the authenticated user
+  tags:
+    - Auth
+  security:
+    - bearerAuth: []
+  responses:
+    '204':
+      description: User logged out successfully
+    '401':
+      description: Unauthorized
