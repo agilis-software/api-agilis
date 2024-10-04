@@ -30,7 +30,7 @@ it('deletes the authenticated user profile successfully', function () {
     ]);
     Sanctum::actingAs($user);
 
-    $response = $this->deleteJson('/api/users/me', [
+    $response = $this->postJson('/api/users/me/delete', [
         'password' => 'password123',
         'password_confirmation' => 'password123'
     ]);
@@ -48,7 +48,7 @@ it('fails to delete the profile with incorrect password', function () {
     ]);
     Sanctum::actingAs($user);
 
-    $response = $this->deleteJson('/api/users/me', [
+    $response = $this->postJson('/api/users/me/delete', [
         'password' => 'wrongpassword',
         'password_confirmation' => 'wrongpassword'
     ]);
