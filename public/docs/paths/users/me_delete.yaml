@@ -1,0 +1,26 @@
+post:
+  summary: Delete the authenticated user's profile
+  tags:
+    - Users
+  security:
+    - bearerAuth: [ ]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            password:
+              type: string
+              example: password123
+            password_confirmation:
+              type: string
+              example: password123
+  responses:
+    '204':
+      description: User profile deleted successfully
+    '401':
+      description: Unauthorized
+    '422':
+      description: Validation error

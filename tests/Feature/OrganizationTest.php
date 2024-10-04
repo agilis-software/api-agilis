@@ -115,3 +115,45 @@ it('fails to set the organization avatar when the user is not the owner', functi
 
     $response->assertStatus(422);
 });
+
+it('deletes an organization successfully', function () {
+    $user = User::factory()->create([
+        'password' => 'password123'
+    ]);
+
+    $organization = Organization::factory()->create([
+        'owner_id' => $user->id
+    ]);
+
+    Sanctum::actingAs($user);
+
+    $response = $this->postJson("/api/organizations/{$organization->id}/delete", [
+        'password' => 'password123',
+        'password_confirmation' => 'password123'
+    ]);
+
+    $response->assertStatus(204);
+});
+
+it('fails to delete an organization when not authenticated', function () {
+    $organization = Organization::factory()->create();
+
+    $response = $this->postJson("/api/organizations/{$organization->id}/delete");
+
+    $response->assertStatus(401);
+});
+
+it('fails to delete an organization when the user is not the owner', function () {
+    $user = User::factory()->create([
+        'password' => 'password123'
+    ]);
+    $organization = Organization::factory()->create();
+    Sanctum::actingAs($user);
+
+    $response = $this->postJson("/api/organizations/{$organization->id}/delete", [
+        'password' => 'password123',
+        'password_confirmation' => 'password123'
+    ]);
+
+    $response->assertStatus(422);
+});

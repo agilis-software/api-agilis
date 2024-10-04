@@ -16,7 +16,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rotas para o perfil do usuário autenticado
     Route::prefix('users/me')->name('profile.')->group(function () {
-        Route::apiSingleton('/', ProfileController::class)->destroyable();
+        Route::apiSingleton('/', ProfileController::class);
+        Route::post('/delete', [ProfileController::class, 'destroy']);
         Route::post('avatar', [ProfileController::class, 'setAvatar'])->name('setAvatar');
         Route::delete('avatar', [ProfileController::class, 'removeAvatar'])->name('removeAvatar');
         Route::put('password', [ProfileController::class, 'updatePassword'])->name('updatePassword');
@@ -31,5 +32,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('{organizationId}/avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
         Route::delete('{organizationId}/avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
     });
-    Route::apiResource('organizations', OrganizationController::class);
+    Route::apiResource('organizations', OrganizationController::class)->except(['destroy']);
+    Route::post('organizations/{organizationId}/delete', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
 });

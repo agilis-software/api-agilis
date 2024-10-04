@@ -33,6 +33,8 @@ paths:
     $ref: './paths/users/me_avatar.yaml'
   /api/users/me/password:
     $ref: './paths/users/me_password.yaml'
+  /api/users/me/delete:
+    $ref: './paths/users/me_delete.yaml'
   /api/users:
     $ref: './paths/users/users.yaml'
   /api/users/{id}:
@@ -43,3 +45,5 @@ paths:
     $ref: './paths/organizations/organizations_[id].yaml'
   /api/organizations/{id}/avatar:
     $ref: './paths/organizations/organizations_[id]_avatar.yaml'
+  /api/organizations/{id}/delete:
+    $ref: './paths/organizations/organizations_[id]_delete.yaml'
