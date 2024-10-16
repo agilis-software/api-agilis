@@ -31,7 +31,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('organizations')->name('organizations.')->group(function () {
         Route::post('{organizationId}/avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
         Route::delete('{organizationId}/avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
+        Route::post('{organizationId}/delete', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
+
+        Route::post('{organizationId}/invite', [OrganizationController::class, 'invite'])->name('invite');
     });
     Route::apiResource('organizations', OrganizationController::class)->except(['destroy']);
-    Route::post('organizations/{organizationId}/delete', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
 });
