@@ -47,3 +47,5 @@ paths:
     $ref: './paths/organizations/organizations_[id]_avatar.yaml'
   /api/organizations/{id}/delete:
     $ref: './paths/organizations/organizations_[id]_delete.yaml'
+  /api/organizations/{id}/invite:
+    $ref: './paths/organizations/organizations_[id]_invite.yaml'
