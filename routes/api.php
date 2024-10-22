@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('{organizationId}/delete', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
 
         Route::post('{organizationId}/invite', [OrganizationController::class, 'invite'])->name('invite');
+
+        Route::apiResource("{organizationId}/projects", ProjectController::class);
     });
     Route::apiResource('organizations', OrganizationController::class)->except(['destroy']);
 });
