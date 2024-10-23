@@ -32,7 +32,7 @@ it('deletes the authenticated user profile successfully', function () {
 
     $response = $this->postJson('/api/users/me/delete', [
         'password' => 'password123',
-        'password_confirmation' => 'password123'
+        'password_confirmation' => 'password123',
     ]);
 
     $response->assertStatus(204);
@@ -50,7 +50,7 @@ it('fails to delete the profile with incorrect password', function () {
 
     $response = $this->postJson('/api/users/me/delete', [
         'password' => 'wrongpassword',
-        'password_confirmation' => 'wrongpassword'
+        'password_confirmation' => 'wrongpassword',
     ]);
 
     $response->assertStatus(422);

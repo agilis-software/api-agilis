@@ -11,7 +11,7 @@ class ProjectStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class ProjectStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'start_date' => 'required|date',
+            'finish_date' => 'required|date|after:start_date',
         ];
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +19,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Rotas para o perfil do usuário autenticado
     Route::prefix('users/me')->name('profile.')->group(function () {
         Route::apiSingleton('/', ProfileController::class);
-        Route::post('/delete', [ProfileController::class, 'destroy']);
+        Route::post('delete', [ProfileController::class, 'destroy']);
         Route::post('avatar', [ProfileController::class, 'setAvatar'])->name('setAvatar');
         Route::delete('avatar', [ProfileController::class, 'removeAvatar'])->name('removeAvatar');
         Route::put('password', [ProfileController::class, 'updatePassword'])->name('updatePassword');
@@ -28,15 +29,28 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('users', UserController::class)
         ->only(['index', 'show']);
 
-    // Rotas para o recurso de organizações
+    // Rotas de organizações
     Route::prefix('organizations')->name('organizations.')->group(function () {
-        Route::post('{organizationId}/avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
-        Route::delete('{organizationId}/avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
-        Route::post('{organizationId}/delete', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
+        Route::prefix('{organizationId}')->name('organization.')->group(function() {
+            Route::post('avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
+            Route::delete('avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
+            Route::post('delete', [OrganizationController::class, 'destroy'])->name('destroy');
+            Route::post('invite', [OrganizationController::class, 'invite'])->name('invite');
 
-        Route::post('{organizationId}/invite', [OrganizationController::class, 'invite'])->name('invite');
+            // Rotas de projetos
+            Route::prefix('projects')->group(function () {
+                Route::prefix('{projectId}')->group(function () {
+                    Route::post('assign', [ProjectUserController::class, 'assign'])->name('projects.users.assign');
+                    Route::post('unassign', [ProjectUserController::class, 'unassign'])->name('projects.users.unassign');
+                    Route::post('leave', [ProjectUserController::class, 'leave'])->name('projects.leave');
 
-        Route::apiResource("{organizationId}/projects", ProjectController::class);
+                    Route::apiResource('users', ProjectUserController::class)
+                        ->only(['index', 'show']);
+                });
+            });
+
+            Route::apiResource('projects', ProjectController::class);
+        });
     });
     Route::apiResource('organizations', OrganizationController::class)->except(['destroy']);
 });

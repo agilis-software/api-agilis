@@ -19,6 +19,8 @@ tags:
     description: Operations related to users
   - name: Organizations
     description: Operations related to organizations
+  - name: Projects
+    description: Operations related to projects
 
 paths:
   /api/login:
@@ -49,3 +51,15 @@ paths:
     $ref: './paths/organizations/organizations_[id]_delete.yaml'
   /api/organizations/{id}/invite:
     $ref: './paths/organizations/organizations_[id]_invite.yaml'
+  /api/organizations/{organizationId}/projects:
+    $ref: './paths/projects/projects.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}:
+    $ref: './paths/projects/projects_[id].yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/users:
+    $ref: './paths/projects/projects_[id]_users.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/users/{userId}:
+    $ref: './paths/projects/projects_[id]_users_[id].yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/assign:
+    $ref: './paths/projects/projects_[id]_assign.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/unassign:
+    $ref: './paths/projects/projects_[id]_unassign.yaml'
