@@ -8,12 +8,12 @@ use Laravel\Sanctum\Sanctum;
 it('sets the organization avatar successfully', function () {
     $user = User::factory()->create();
     $organization = Organization::factory()->create([
-        'owner_id' => $user->id
+        'owner_id' => $user->id,
     ]);
     Sanctum::actingAs($user);
 
     $response = $this->post("/api/organizations/{$organization->id}/avatar", [
-        'avatar' => UploadedFile::fake()->image('avatar.jpg')
+        'avatar' => UploadedFile::fake()->image('avatar.jpg'),
     ]);
 
     $response->assertStatus(200);
@@ -25,7 +25,7 @@ it('fails to set the organization avatar with invalid data', function () {
     Sanctum::actingAs($user);
 
     $response = $this->post("/api/organizations/{$organization->id}/avatar", [
-        'avatar' => 'not-an-image'
+        'avatar' => 'not-an-image',
     ]);
 
     $response->assertStatus(422);
@@ -34,7 +34,7 @@ it('fails to set the organization avatar with invalid data', function () {
 it('removes the organization avatar successfully', function () {
     $user = User::factory()->create();
     $organization = Organization::factory()->create([
-        'owner_id' => $user->id
+        'owner_id' => $user->id,
     ]);
     Sanctum::actingAs($user);
 
@@ -80,7 +80,7 @@ it('fails to set the organization avatar when not authenticated', function () {
     $organization = Organization::factory()->create();
 
     $response = $this->post("/api/organizations/{$organization->id}/avatar", [
-        'avatar' => UploadedFile::fake()->image('avatar.jpg')
+        'avatar' => UploadedFile::fake()->image('avatar.jpg'),
     ]);
 
     $response->assertStatus(401);
@@ -110,7 +110,7 @@ it('fails to set the organization avatar when the user is not the owner', functi
     Sanctum::actingAs($user);
 
     $response = $this->post("/api/organizations/{$organization->id}/avatar", [
-        'avatar' => UploadedFile::fake()->image('avatar.jpg')
+        'avatar' => UploadedFile::fake()->image('avatar.jpg'),
     ]);
 
     $response->assertStatus(422);
@@ -118,18 +118,18 @@ it('fails to set the organization avatar when the user is not the owner', functi
 
 it('deletes an organization successfully', function () {
     $user = User::factory()->create([
-        'password' => 'password123'
+        'password' => 'password123',
     ]);
 
     $organization = Organization::factory()->create([
-        'owner_id' => $user->id
+        'owner_id' => $user->id,
     ]);
 
     Sanctum::actingAs($user);
 
     $response = $this->postJson("/api/organizations/{$organization->id}/delete", [
         'password' => 'password123',
-        'password_confirmation' => 'password123'
+        'password_confirmation' => 'password123',
     ]);
 
     $response->assertStatus(204);
@@ -145,14 +145,14 @@ it('fails to delete an organization when not authenticated', function () {
 
 it('fails to delete an organization when the user is not the owner', function () {
     $user = User::factory()->create([
-        'password' => 'password123'
+        'password' => 'password123',
     ]);
     $organization = Organization::factory()->create();
     Sanctum::actingAs($user);
 
     $response = $this->postJson("/api/organizations/{$organization->id}/delete", [
         'password' => 'password123',
-        'password_confirmation' => 'password123'
+        'password_confirmation' => 'password123',
     ]);
 
     $response->assertStatus(422);
@@ -161,13 +161,13 @@ it('fails to delete an organization when the user is not the owner', function ()
 it('adds a user to an organization successfully', function () {
     $user = User::factory()->create();
     $organization = Organization::factory()->create([
-        'owner_id' => $user->id
+        'owner_id' => $user->id,
     ]);
     $userToAdd = User::factory()->create();
     Sanctum::actingAs($user);
 
     $response = $this->postJson("/api/organizations/{$organization->id}/invite", [
-        'email' => $userToAdd->email
+        'email' => $userToAdd->email,
     ]);
 
     $response->assertStatus(200);
@@ -178,7 +178,7 @@ it('fails to add a user to an organization when not authenticated', function () 
     $userToAdd = User::factory()->create();
 
     $response = $this->postJson("/api/organizations/{$organization->id}/invite", [
-        'email' => $userToAdd->email
+        'email' => $userToAdd->email,
     ]);
 
     $response->assertStatus(401);
@@ -191,7 +191,7 @@ it('fails to add a user to an organization when the user is not the owner', func
     Sanctum::actingAs($user);
 
     $response = $this->postJson("/api/organizations/{$organization->id}/invite", [
-        'email' => $userToAdd->email
+        'email' => $userToAdd->email,
     ]);
 
     $response->assertStatus(422);
@@ -200,12 +200,12 @@ it('fails to add a user to an organization when the user is not the owner', func
 it('fails to add a user to an organization with invalid data', function () {
     $user = User::factory()->create();
     $organization = Organization::factory()->create([
-        'owner_id' => $user->id
+        'owner_id' => $user->id,
     ]);
     Sanctum::actingAs($user);
 
     $response = $this->postJson("/api/organizations/{$organization->id}/invite", [
-        'email' => 'not-an-email'
+        'email' => 'not-an-email',
     ]);
 
     $response->assertStatus(422);
@@ -214,12 +214,12 @@ it('fails to add a user to an organization with invalid data', function () {
 it('fails to add a user to an organization with an invalid email', function () {
     $user = User::factory()->create();
     $organization = Organization::factory()->create([
-        'owner_id' => $user->id
+        'owner_id' => $user->id,
     ]);
     Sanctum::actingAs($user);
 
     $response = $this->postJson("/api/organizations/{$organization->id}/invite", [
-        'email' => 'not-an-email'
+        'email' => 'not-an-email',
     ]);
 
     $response->assertStatus(422);
@@ -228,14 +228,14 @@ it('fails to add a user to an organization with an invalid email', function () {
 it('fails to add a user to an organization with an email that is already a member', function () {
     $user = User::factory()->create();
     $organization = Organization::factory()->create([
-        'owner_id' => $user->id
+        'owner_id' => $user->id,
     ]);
     $userToAdd = User::factory()->create();
     $organization->users()->attach($userToAdd->id);
     Sanctum::actingAs($user);
 
     $response = $this->postJson("/api/organizations/{$organization->id}/invite", [
-        'email' => $userToAdd->email
+        'email' => $userToAdd->email,
     ]);
 
     $response->assertStatus(422);
