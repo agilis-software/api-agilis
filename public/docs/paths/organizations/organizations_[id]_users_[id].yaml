@@ -1,0 +1,24 @@
+get:
+  summary: Retrieve a specific user in the organization
+  tags:
+    - Organizations
+  security:
+    - bearerAuth: [ ]
+  parameters:
+    - name: organizationId
+      in: path
+      required: true
+      schema:
+        type: integer
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: Successfully retrieved the user
+    '401':
+      description: Unauthorized
+    '422':
+      description: Validation error

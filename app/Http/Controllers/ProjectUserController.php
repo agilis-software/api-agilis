@@ -13,12 +13,14 @@ class ProjectUserController extends Controller
     private function findProject(string $organizationId, string $projectId)
     {
         $organization = Auth::user()->organizations()->findOrFail($organizationId);
+
         return $organization->projects()->findOrFail($projectId);
     }
 
     public function index(string $organizationId, string $projectId)
     {
         $project = $this->findProject($organizationId, $projectId);
+
         return UserResource::collection($project->users)->response()->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
@@ -26,6 +28,7 @@ class ProjectUserController extends Controller
     {
         $project = $this->findProject($organizationId, $projectId);
         $user = $project->users()->findOrFail($userId);
+
         return (new UserResource($user))->response()->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
@@ -36,8 +39,9 @@ class ProjectUserController extends Controller
         $existingIds = $project->users()->pluck('id')->toArray();
         $newIds = array_diff($users['users'], $existingIds);
 
-        if (!empty($newIds)) {
+        if (! empty($newIds)) {
             $project->users()->attach($newIds);
+
             return UserResource::collection(User::find($newIds))->response()->setEncodingOptions(JSON_UNESCAPED_SLASHES);
         }
 
@@ -51,8 +55,9 @@ class ProjectUserController extends Controller
         $existingIds = $project->users()->pluck('id')->toArray();
         $removeIds = array_intersect($users['users'], $existingIds);
 
-        if (!empty($removeIds)) {
+        if (! empty($removeIds)) {
             $project->users()->detach($removeIds);
+
             return response()->noContent();
         }
 

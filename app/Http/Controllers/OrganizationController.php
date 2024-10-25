@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\OrganizationInviteRequest;
 use App\Http\Requests\OrganizationStoreRequest;
 use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Resources\OrganizationResource;
@@ -138,39 +137,6 @@ class OrganizationController extends Controller
         $organization->update([
             'avatar' => config('agilis.organizations.avatars.default'),
         ]);
-
-        return (new OrganizationResource($organization))
-            ->response()
-            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
-    }
-
-    /**
-     * Adiciona membros a uma organização
-     * adiciona apenas se o usuário for dono da organização
-     * e o email corresponde a um usuário que não está na organização
-     */
-    public function invite(OrganizationInviteRequest $request, int $id)
-    {
-        Validator::make(
-            ['organization_id' => $id],
-            ['organization_id' => ['required', 'exists:organizations,id', new OrganizationOwnerRule]]
-        )->validate();
-
-        $organization = Organization::find($id);
-
-        abort_unless($organization, 404, 'Not found');
-
-        $data = $request->validated();
-
-        $user = $organization->users()->where('email', $data['email'])->first();
-
-        abort_if($user, 422, 'User already in organization');
-
-        $user = Auth::user()->where('email', $data['email'])->first();
-
-        abort_unless($user, 404, 'User not found');
-
-        $organization->users()->attach($user->id);
 
         return (new OrganizationResource($organization))
             ->response()

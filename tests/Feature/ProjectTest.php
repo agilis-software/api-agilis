@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\ProjectUserController;
-use App\Http\Requests\ProjectAssignRequest;
-use App\Http\Requests\ProjectUnassignRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Organization;
 use App\Models\Project;

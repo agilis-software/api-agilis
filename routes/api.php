@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
@@ -31,11 +32,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rotas de organizações
     Route::prefix('organizations')->name('organizations.')->group(function () {
-        Route::prefix('{organizationId}')->name('organization.')->group(function() {
+        Route::prefix('{organizationId}')->name('organization.')->group(function () {
             Route::post('avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
             Route::delete('avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
             Route::post('delete', [OrganizationController::class, 'destroy'])->name('destroy');
-            Route::post('invite', [OrganizationController::class, 'invite'])->name('invite');
+
+            Route::prefix('users')->name('users.')->group(function () {
+                Route::post('{userId}/kick', [OrganizationUserController::class, 'kick'])->name('kick');
+            });
+
+            Route::apiResource('users', OrganizationUserController::class)
+                ->only(['index', 'show']);
+
+            Route::post('invite', [OrganizationUserController::class, 'invite'])->name('invite');
+            Route::post('leave', [OrganizationUserController::class, 'leave'])->name('leave');
 
             // Rotas de projetos
             Route::prefix('projects')->group(function () {

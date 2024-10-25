@@ -51,6 +51,14 @@ paths:
     $ref: './paths/organizations/organizations_[id]_delete.yaml'
   /api/organizations/{id}/invite:
     $ref: './paths/organizations/organizations_[id]_invite.yaml'
+  /api/organizations/{id}/leave:
+    $ref: './paths/organizations/organizations_[id]_leave.yaml'
+  /api/organizations/{id}/users:
+    $ref: './paths/organizations/organizations_[id]_users.yaml'
+  /api/organizations/{id}/users/{userId}:
+    $ref: './paths/organizations/organizations_[id]_users_[id].yaml'
+  /api/organizations/{id}/users/{userId}/kick:
+    $ref: './paths/organizations/organizations_[id]_users_[id]_kick.yaml'
   /api/organizations/{organizationId}/projects:
     $ref: './paths/projects/projects.yaml'
   /api/organizations/{organizationId}/projects/{projectId}:
