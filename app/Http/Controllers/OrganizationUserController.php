@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationInviteRequest;
+use App\Http\Resources\OrganizationMemberResource;
 use App\Http\Resources\OrganizationResource;
 use App\Http\Resources\UserResource;
 use App\Models\Organization;
+use App\Models\User;
 use App\Rules\OrganizationOwnerRule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -14,11 +16,33 @@ class OrganizationUserController extends Controller
 {
     public function index(int $id)
     {
-        $organization = Organization::findOrFail($id);
+        $user = Auth::user();
+        $organization = $user->organizations->find($id);
 
-        return UserResource::collection($organization->users)
-            > response()
-                ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
+        abort_unless($organization, 404, 'Organization not found');
+
+        return OrganizationMemberResource::collection(
+            $organization->users->map(function ($user) use ($organization) {
+                return new OrganizationMemberResource($user, $organization);
+            }))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
+    }
+
+    public function show(int $id, int $userId)
+    {
+        $user = Auth::user();
+        $organization = $user->organizations->find($id);
+
+        abort_unless($organization, 404, 'Organization not found');
+
+        $userToFind = $organization->users->find($userId);
+
+        abort_unless($userToFind, 404, 'User not found');
+
+        return (new OrganizationMemberResource($userToFind, $organization))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     public function invite(OrganizationInviteRequest $request, int $id)
@@ -62,7 +86,6 @@ class OrganizationUserController extends Controller
         abort_if($organization->owner_id === Auth::id(), 422, 'Owner cannot leave organization');
 
         $organization->users()->findOrFail(Auth::id());
-
         $organization->users()->detach(Auth::id());
 
         return (new OrganizationResource($organization))

@@ -155,6 +155,22 @@ it('fails to create a project when user is not in organization', function () {
     $response->assertStatus(422);
 });
 
+it('fails to create a project when user is not the owner of organization', function () {
+    $user = User::factory()->create();
+    $organization = Organization::factory()->create();
+    $organization->users()->attach($user->id);
+    Sanctum::actingAs($user);
+
+    $response = $this->post("/api/organizations/{$organization->id}/projects", [
+        'name' => 'Project Name',
+        'description' => 'Project Description',
+        'start_date' => '2022-01-01',
+        'finish_date' => '2022-12-31',
+    ]);
+
+    $response->assertStatus(422);
+});
+
 it('fails to show a project when not authenticated', function () {
     $organization = Organization::factory()->create();
     $project = Project::factory()->create(['organization_id' => $organization->id]);

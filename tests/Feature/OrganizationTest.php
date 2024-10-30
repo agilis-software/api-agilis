@@ -358,3 +358,108 @@ it('fails to leave an organization when the user is not a member', function () {
 
     $response->assertStatus(404);
 });
+
+// Organization User Tests
+it('lists all users of an organization', function () {
+    $user = User::factory()->create();
+
+    $organization = Organization::factory()->create(['owner_id' => $user->id]);
+    $organization->users()->attach($user);
+    $user2 = User::factory()->create();
+    $user3 = User::factory()->create();
+
+    $organization->users()->attach([$user2->id, $user3->id]);
+    Sanctum::actingAs($user);
+
+    $response = $this->getJson("/api/organizations/{$organization->id}/users");
+
+    $response->assertStatus(200);
+
+    $response->assertJsonCount(3, 'data');
+});
+
+it('get a specific user from an organization', function () {
+    $user = User::factory()->create();
+
+    $organization = Organization::factory()->create(['owner_id' => $user->id]);
+    $organization->users()->attach($user);
+
+    $user2 = User::factory()->create();
+    $organization->users()->attach($user2->id);
+
+    Sanctum::actingAs($user);
+
+    $response = $this->getJson("/api/organizations/{$organization->id}/users/{$user2->id}");
+
+    $response->assertStatus(200);
+    $response->assertJsonStructure(['data' => ['id', 'name', 'birth_date', 'avatar_url', 'is_owner']]);
+});
+
+it('fails to lists all users from an organization when is not authenticated', function () {
+    $user = User::factory()->create();
+
+    $organization = Organization::factory()->create(['owner_id' => $user->id]);
+    $organization->users()->attach($user);
+
+    $user2 = User::factory()->create();
+    $organization->users()->attach($user2->id);
+
+    $response = $this->getJson("/api/organizations/{$organization->id}/users");
+    $response->assertStatus(401);
+});
+
+it('fails to lists all users from an organization when organization not exists', function () {
+    $user = User::factory()->create();
+
+    $organization = Organization::factory()->create(['owner_id' => $user->id]);
+    $organization->users()->attach($user);
+
+    $user2 = User::factory()->create();
+    $organization->users()->attach($user2->id);
+
+    Sanctum::actingAs($user);
+
+    $response = $this->getJson("/api/organizations/0/users");
+    $response->assertStatus(404);
+});
+
+it('fails to get a specific user from organization when is not authenticated', function () {
+    $user = User::factory()->create();
+
+    $organization = Organization::factory()->create(['owner_id' => $user->id]);
+    $organization->users()->attach($user);
+
+    $user2 = User::factory()->create();
+    $organization->users()->attach($user2->id);
+
+    $response = $this->getJson("/api/organizations/{$organization->id}/users/{$user2->id}");
+    $response->assertStatus(401);
+});
+
+it('fails to get a specific user from organization when organization not exists', function () {
+    $user = User::factory()->create();
+
+    $organization = Organization::factory()->create(['owner_id' => $user->id]);
+    $organization->users()->attach($user);
+
+    $user2 = User::factory()->create();
+    $organization->users()->attach($user2->id);
+
+    Sanctum::actingAs($user);
+
+    $response = $this->getJson("/api/organizations/0/users/{$user2->id}");
+    $response->assertStatus(404);
+});
+
+
+it('fails to get a specific user from organization when user not exists', function () {
+    $user = User::factory()->create();
+
+    $organization = Organization::factory()->create(['owner_id' => $user->id]);
+    $organization->users()->attach($user);
+
+    Sanctum::actingAs($user);
+
+    $response = $this->getJson("/api/organizations/{$organization->id}/users/0");
+    $response->assertStatus(404);
+});
