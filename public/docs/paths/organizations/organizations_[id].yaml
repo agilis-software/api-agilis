@@ -1,0 +1,100 @@
+get:
+  summary: Get an organization by ID
+  tags:
+    - Organizations
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: Organization retrieved successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Organization Name
+                  description:
+                    type: string
+                    example: Organization Description
+                  avatar_url:
+                    type: string
+                    example: http://localhost:8000/files/organizations/avatars/default.png
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: 2023-01-01T00:00:00Z
+    '401':
+      description: Unauthorized
+    '404':
+      description: Organization not found
+
+put:
+  summary: Update an organization by ID
+  tags:
+    - Organizations
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Organization Name
+            description:
+              type: string
+              example: Organization Description
+  responses:
+    '200':
+      description: Organization updated successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Organization Name
+                  description:
+                    type: string
+                    example: Organization Description
+                  avatar_url:
+                    type: string
+                    example: http://localhost:8000/files/organizations/avatars/default.png
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: 2023-01-01T00:00:00Z
+    '401':
+      description: Unauthorized
+    '422':
+      description: Validation error

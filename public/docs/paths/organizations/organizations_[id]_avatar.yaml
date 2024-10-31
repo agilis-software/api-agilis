@@ -1,0 +1,47 @@
+post:
+  summary: Set the organization's avatar
+  tags:
+    - Organizations
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            avatar:
+              type: string
+              format: binary
+  responses:
+    '200':
+      description: Organization avatar set successfully
+    '401':
+      description: Unauthorized
+    '422':
+      description: Validation error
+
+delete:
+  summary: Remove the organization's avatar
+  tags:
+    - Organizations
+  security:
+    - bearerAuth: []
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  responses:
+    '204':
+      description: Organization avatar removed successfully
+    '401':
+      description: Unauthorized

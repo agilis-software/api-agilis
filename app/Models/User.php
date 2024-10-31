@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
         'birth_date',
     ];
 
@@ -70,5 +71,10 @@ class User extends Authenticatable
     public function tasks()
     {
         return $this->hasMany(Task::class, 'assignee_id');
+    }
+
+    public function ownOrganizations()
+    {
+        return $this->hasMany(Organization::class, 'owner_id');
     }
 }

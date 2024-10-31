@@ -1,0 +1,38 @@
+post:
+  summary: Unassign users from a project
+  tags:
+    - Projects
+  security:
+    - bearerAuth: []
+  parameters:
+    - in: path
+      name: organizationId
+      required: true
+      schema:
+        type: string
+      description: Organization ID
+    - in: path
+      name: projectId
+      required: true
+      schema:
+        type: string
+      description: Project ID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                type: integer
+              example: [1, 2, 3]
+  responses:
+    '204':
+      description: Users unassigned successfully, no content
+    '400':
+      description: Bad request
+    '401':
+      description: Unauthorized

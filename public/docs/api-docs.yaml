@@ -1,0 +1,73 @@
+openapi: 3.1.0
+info:
+  title: Agilis API
+  description: Agilis é uma plataforma de gestão de times de programação, permitindo atribuir tarefas e comunicar-se com os colaboradores em um único aplicativo web.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Development server (Laravel Defaults)
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum
+tags:
+  - name: Auth
+    description: Operations related to authentication
+  - name: Users
+    description: Operations related to users
+  - name: Organizations
+    description: Operations related to organizations
+  - name: Projects
+    description: Operations related to projects
+
+paths:
+  /api/login:
+    $ref: './paths/auth/login.yaml'
+  /api/register:
+    $ref: './paths/auth/register.yaml'
+  /api/logout:
+    $ref: './paths/auth/logout.yaml'
+  /api/users/me:
+    $ref: './paths/users/me.yaml'
+  /api/users/me/avatar:
+    $ref: './paths/users/me_avatar.yaml'
+  /api/users/me/password:
+    $ref: './paths/users/me_password.yaml'
+  /api/users/me/delete:
+    $ref: './paths/users/me_delete.yaml'
+  /api/users:
+    $ref: './paths/users/users.yaml'
+  /api/users/{id}:
+    $ref: './paths/users/users_[id].yaml'
+  /api/organizations:
+    $ref: './paths/organizations/organizations.yaml'
+  /api/organizations/{id}:
+    $ref: './paths/organizations/organizations_[id].yaml'
+  /api/organizations/{id}/avatar:
+    $ref: './paths/organizations/organizations_[id]_avatar.yaml'
+  /api/organizations/{id}/delete:
+    $ref: './paths/organizations/organizations_[id]_delete.yaml'
+  /api/organizations/{id}/invite:
+    $ref: './paths/organizations/organizations_[id]_invite.yaml'
+  /api/organizations/{id}/leave:
+    $ref: './paths/organizations/organizations_[id]_leave.yaml'
+  /api/organizations/{id}/users:
+    $ref: './paths/organizations/organizations_[id]_users.yaml'
+  /api/organizations/{id}/users/{userId}:
+    $ref: './paths/organizations/organizations_[id]_users_[id].yaml'
+  /api/organizations/{id}/users/{userId}/kick:
+    $ref: './paths/organizations/organizations_[id]_users_[id]_kick.yaml'
+  /api/organizations/{organizationId}/projects:
+    $ref: './paths/projects/projects.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}:
+    $ref: './paths/projects/projects_[id].yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/users:
+    $ref: './paths/projects/projects_[id]_users.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/users/{userId}:
+    $ref: './paths/projects/projects_[id]_users_[id].yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/assign:
+    $ref: './paths/projects/projects_[id]_assign.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/unassign:
+    $ref: './paths/projects/projects_[id]_unassign.yaml'
