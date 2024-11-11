@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title', 45);
             $table->foreignId('assignee_id')->nullable()->constrained('users')->onDelete('set null')->onUpdate('cascade');
             $table->foreignId('status_id')->constrained('statuses')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade')->onUpdate('cascade');
             $table->string('description', 255)->nullable();
             $table->date('due_date')->nullable();
             $table->timestamps();
