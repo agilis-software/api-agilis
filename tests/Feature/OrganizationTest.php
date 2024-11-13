@@ -419,7 +419,7 @@ it('fails to lists all users from an organization when organization not exists',
 
     Sanctum::actingAs($user);
 
-    $response = $this->getJson("/api/organizations/0/users");
+    $response = $this->getJson('/api/organizations/0/users');
     $response->assertStatus(404);
 });
 
@@ -450,7 +450,6 @@ it('fails to get a specific user from organization when organization not exists'
     $response = $this->getJson("/api/organizations/0/users/{$user2->id}");
     $response->assertStatus(404);
 });
-
 
 it('fails to get a specific user from organization when user not exists', function () {
     $user = User::factory()->create();

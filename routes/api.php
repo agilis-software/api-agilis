@@ -21,7 +21,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rotas para o perfil do usuário autenticado
     Route::prefix('users')->name('users.')->group(function () {
-        Route::prefix("me")->name('profile.')->group(function () {
+        Route::prefix('me')->name('profile.')->group(function () {
             Route::apiSingleton('/', ProfileController::class);
             Route::post('delete', [ProfileController::class, 'destroy']);
             Route::post('avatar', [ProfileController::class, 'setAvatar'])->name('setAvatar');
@@ -64,8 +64,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
                     Route::prefix('tasks')->group(function () {
                         Route::prefix('{task}')->group(function () {
                             Route::put('status', [TaskController::class, 'updateStatus'])->name('tasks.status.update');
-
-                            Route::apiSingleton('assignee', TaskAssigneeController::class)->destroyable();
+                            Route::put('assignee', [TaskAssigneeController::class, 'update'])->name('tasks.assignee.update');
                         });
                     });
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +27,7 @@ class OrganizationMemberResource extends JsonResource
             'birth_date' => $this->birth_date,
             'avatar_url' => Storage::disk('public')
                 ->url($this->avatar),
-            'is_owner' => $this->organization->owner_id == $this->id
+            'is_owner' => $this->organization->owner_id == $this->id,
         ];
     }
 }
