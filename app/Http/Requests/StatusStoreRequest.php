@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaskStatusRequest extends FormRequest
+class StatusStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class TaskStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status_id' => ['required', 'exists:statuses,id'],
+            'name' => 'required|string|max:255',
         ];
     }
 }

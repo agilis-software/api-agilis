@@ -90,11 +90,9 @@ class TaskController extends Controller
     {
         $task = $this->getTask($organizationId, $projectId, $taskId);
 
-        Validator::make(['organization_id' => $organizationId], [
-            'organization_id' => ['required', 'exists:organizations,id', new OrganizationOwnerRule],
-        ])->validate();
+        $project = $task->project;
 
-        $status = Status::where('name', $request->status)->first();
+        $status = $project->statuses()->findOrFail($request->status_id);
 
         abort_unless($status, 404, 'Not found');
 

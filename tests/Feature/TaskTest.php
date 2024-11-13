@@ -2,7 +2,6 @@
 
 use App\Models\Organization;
 use App\Models\Project;
-use App\Models\Status;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -20,13 +19,13 @@ it('should list tasks', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
-    $doingStatus = Status::create(['name' => 'DOING']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
+    $doingStatus = $project->statuses()->create(['name' => 'DOING']);
 
     $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
@@ -39,7 +38,7 @@ it('should list tasks', function () {
 
     Sanctum::actingAs($user);
 
-    $response = $this->getJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks");
+    $response = $this->getJson("/api/organizations/$organization->id/projects/$project->id/tasks");
 
     $response->assertOk();
     $response->assertJsonCount(2, 'data');
@@ -55,12 +54,12 @@ it('should store a task', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     Sanctum::actingAs($user);
 
-    $dueDate = now()->addDays(1);
-    $response = $this->postJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks", [
+    $dueDate = now()->addDays();
+    $response = $this->postJson("/api/organizations/$organization->id/projects/$project->id/tasks", [
         'title' => 'Task 1',
         'description' => 'Description 1',
         'due_date' => $dueDate->toISOString(),
@@ -85,12 +84,12 @@ it('should update a task', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
@@ -98,7 +97,7 @@ it('should update a task', function () {
 
     $newDueDate = now()->addDays(2);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id", [
         'title' => 'Task 1 Updated',
         'description' => 'Description 1 Updated',
         'due_date' => $newDueDate->toISOString(),
@@ -123,18 +122,18 @@ it('should delete a task', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
     Sanctum::actingAs($user);
 
-    $response = $this->deleteJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}");
+    $response = $this->deleteJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id");
 
     $response->assertNoContent();
 });
@@ -151,20 +150,20 @@ it('should update a task status', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
-    $doingStatus = Status::create(['name' => 'DOING']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
+    $doingStatus = $project->statuses()->create(['name' => 'DOING']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}/status", [
-        'status' => 'DOING',
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id/status", [
+        'status_id' => $doingStatus->id,
     ]);
 
     $response->assertOk();
@@ -183,7 +182,7 @@ it('should not list tasks when project not exists', function () {
 
     Sanctum::actingAs($user);
 
-    $response = $this->getJson("/api/organizations/{$organization->id}/projects/1/tasks");
+    $response = $this->getJson("/api/organizations/$organization->id/projects/1/tasks");
 
     $response->assertNotFound();
 });
@@ -208,10 +207,10 @@ it('should not store a task when project not exists', function () {
 
     Sanctum::actingAs($user);
 
-    $response = $this->postJson("/api/organizations/{$organization->id}/projects/1/tasks", [
+    $response = $this->postJson("/api/organizations/$organization->id/projects/1/tasks", [
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
     ]);
 
     $response->assertNotFound();
@@ -225,7 +224,7 @@ it('should not store a task when organization not exists', function () {
     $response = $this->postJson('/api/organizations/1/projects/1/tasks', [
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
     ]);
 
     $response->assertNotFound();
@@ -241,10 +240,11 @@ it('should not update a task when project not exists', function () {
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/1/tasks/1", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/1/tasks/1", [
         'title' => 'Task 1 Updated',
         'description' => 'Description 1 Updated',
         'due_date' => now()->addDays(2),
+        'status_id' => 1,
     ]);
 
     $response->assertNotFound();
@@ -274,7 +274,7 @@ it('should not delete a task when project not exists', function () {
 
     Sanctum::actingAs($user);
 
-    $response = $this->deleteJson("/api/organizations/{$organization->id}/projects/1/tasks/1");
+    $response = $this->deleteJson("/api/organizations/$organization->id/projects/1/tasks/1");
 
     $response->assertNotFound();
 });
@@ -299,11 +299,11 @@ it('should not update a task status when project not exists', function () {
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/1/tasks/1/status", [
-        'status' => 'DOING',
+    $response = $this->putJson("/api/organizations/$organization->id/projects/1/tasks/1/status", [
+        'status_id' => 1,
     ]);
 
-    $response->assertNotFound();
+    $response->assertStatus(422);
 });
 
 it('should not update a task status when organization not exists', function () {
@@ -312,10 +312,10 @@ it('should not update a task status when organization not exists', function () {
     Sanctum::actingAs($user);
 
     $response = $this->putJson('/api/organizations/1/projects/1/tasks/1/status', [
-        'status' => 'DOING',
+        'status_id' => 1,
     ]);
 
-    $response->assertNotFound();
+    $response->assertStatus(422);
 });
 
 it('should not store a task when invalid form data is provided', function () {
@@ -330,10 +330,10 @@ it('should not store a task when invalid form data is provided', function () {
 
     Sanctum::actingAs($user);
 
-    $response = $this->postJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks", [
+    $response = $this->postJson("/api/organizations/$organization->id/projects/$project->id/tasks", [
         'title' => '',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
     ]);
 
     $response->assertStatus(422);
@@ -350,18 +350,18 @@ it('should not update a task when invalid form data is provided', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id", [
         'title' => '',
         'description' => 'Description 1 Updated',
         'due_date' => now()->addDays(2),
@@ -381,23 +381,23 @@ it('should not update a task status when invalid form data is provided', functio
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}/status", [
-        'status' => 'INVALID_STATUS',
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id/status", [
+        'status_id' => 100,
     ]);
 
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors('status');
+    $response->assertJsonValidationErrors('status_id');
 });
 
 it('should not store a task when user is not authenticated', function () {
@@ -405,10 +405,10 @@ it('should not store a task when user is not authenticated', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $response = $this->postJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks", [
+    $response = $this->postJson("/api/organizations/$organization->id/projects/$project->id/tasks", [
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
     ]);
 
     $response->assertUnauthorized();
@@ -419,16 +419,16 @@ it('should not update a task when user is not authenticated', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id", [
         'title' => 'Task 1 Updated',
         'description' => 'Description 1 Updated',
         'due_date' => now()->addDays(2),
@@ -442,16 +442,16 @@ it('should not delete a task when user is not authenticated', function () {
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
-    $response = $this->deleteJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}");
+    $response = $this->deleteJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id");
 
     $response->assertUnauthorized();
 });
@@ -461,17 +461,17 @@ it('should not update a task status when user is not authenticated', function ()
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}/status", [
-        'status' => 'DOING',
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id/status", [
+        'status_id' => $todoStatus->id,
     ]);
 
     $response->assertUnauthorized();
@@ -485,12 +485,12 @@ it('should not store a task when user is not the owner of the organization', fun
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     Sanctum::actingAs($user);
 
-    $dueDate = now()->addDays(1);
-    $response = $this->postJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks", [
+    $dueDate = now()->addDays();
+    $response = $this->postJson("/api/organizations/$organization->id/projects/$project->id/tasks", [
         'title' => 'Task 1',
         'description' => 'Description 1',
         'due_date' => $dueDate->toISOString(),
@@ -506,18 +506,18 @@ it('should not update a task when user is not the owner of the organization', fu
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id", [
         'title' => 'Task 1 Updated',
         'description' => 'Description 1 Updated',
         'due_date' => now()->addDays(2),
@@ -534,49 +534,18 @@ it('should not delete a task when user is not the owner of the organization', fu
 
     $project = Project::factory()->create(['organization_id' => $organization->id]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
     Sanctum::actingAs($user);
 
-    $response = $this->deleteJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}");
-
-    $response->assertStatus(422);
-});
-
-it('should not update a task status when user is not the owner of the organization', function () {
-    $user = User::factory()->create();
-    $organization = Organization::factory()->create();
-    $organization->users()->attach($user->id);
-
-    $project = Project::factory()->create(['organization_id' => $organization->id]);
-
-    $this->assertDatabaseHas('projects', [
-        'id' => $project->id,
-        'organization_id' => $organization->id,
-    ]);
-
-    $todoStatus = Status::create(['name' => 'TO_DO']);
-    $doingStatus = Status::create(['name' => 'DOING']);
-
-    $task = $project->tasks()->create([
-        'title' => 'Task 1',
-        'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
-        'status_id' => $todoStatus->id,
-    ]);
-
-    Sanctum::actingAs($user);
-
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}/status", [
-        'status' => 'DOING',
-    ]);
+    $response = $this->deleteJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id");
 
     $response->assertStatus(422);
 });
@@ -594,20 +563,20 @@ it('should assign a project user to a task', function () {
         'description' => 'Description 1',
     ]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
-    $projectUser = $project->users()->attach($user->id);
+    $project->users()->attach($user->id);
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}/assignee", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id/assignee", [
         'assignee_id' => $user->id,
     ]);
 
@@ -638,18 +607,18 @@ it('should not assign a project user to a task when user is not authenticated', 
         'description' => 'Description 1',
     ]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
-    $projectUser = $project->users()->attach($user->id);
+    $project->users()->attach($user->id);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}/assignee", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id/assignee", [
         'assignee_id' => $user->id,
     ]);
 
@@ -666,7 +635,7 @@ it('should not assign a project user to a task when project not exists', functio
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/1/tasks/1/assignee", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/1/tasks/1/assignee", [
         'assignee_id' => $user->id,
     ]);
 
@@ -696,20 +665,20 @@ it('should not assign a project user to a task when user is not the owner of the
         'description' => 'Description 1',
     ]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
-    $projectUser = $project->users()->attach($user->id);
+    $project->users()->attach($user->id);
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}/assignee", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id/assignee", [
         'assignee_id' => $user->id,
     ]);
 
@@ -727,18 +696,18 @@ it('should not assign a project user to a task when user is not a project user',
         'description' => 'Description 1',
     ]);
 
-    $todoStatus = Status::create(['name' => 'TO_DO']);
+    $todoStatus = $project->statuses()->create(['name' => 'TO_DO']);
 
     $task = $project->tasks()->create([
         'title' => 'Task 1',
         'description' => 'Description 1',
-        'due_date' => now()->addDays(1),
+        'due_date' => now()->addDays(),
         'status_id' => $todoStatus->id,
     ]);
 
     Sanctum::actingAs($user);
 
-    $response = $this->putJson("/api/organizations/{$organization->id}/projects/{$project->id}/tasks/{$task->id}/assignee", [
+    $response = $this->putJson("/api/organizations/$organization->id/projects/$project->id/tasks/$task->id/assignee", [
         'assignee_id' => $user->id,
     ]);
 
