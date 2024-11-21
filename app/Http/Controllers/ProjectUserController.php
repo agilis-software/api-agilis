@@ -63,4 +63,15 @@ class ProjectUserController extends Controller
 
         abort(400, 'User not assigned to project');
     }
+
+    public function leave(string $organizationId, string $projectId)
+    {
+        $project = $this->findProject($organizationId, $projectId);
+        $user = Auth::user();
+
+        $project->users()->detach($user->id);
+        $project->tasks()->where('assignee_id', $user->id)->update(['assignee_id' => null]);
+
+        return response()->noContent();
+    }
 }

@@ -17,4 +17,9 @@ class Status extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

@@ -6,6 +6,9 @@ use App\Http\Controllers\OrganizationUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\TaskAssigneeController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +22,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rotas para o perfil do usuário autenticado
     Route::prefix('users')->name('users.')->group(function () {
-        Route::prefix("me")->name('profile.')->group(function () {
+        Route::prefix('me')->name('profile.')->group(function () {
             Route::apiSingleton('/', ProfileController::class);
             Route::post('delete', [ProfileController::class, 'destroy']);
             Route::post('avatar', [ProfileController::class, 'setAvatar'])->name('setAvatar');
@@ -30,17 +33,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rotas para o recurso de usuários
     Route::apiResource('users', UserController::class)
-        ->only(['index', 'show']);
+        ->only(['index', 'show'])
+        ->where(['user' => '[0-9]+']);
+
 
     // Rotas de organizações
     Route::prefix('organizations')->name('organizations.')->group(function () {
-        Route::prefix('{organizationId}')->name('organization.')->group(function () {
+        Route::prefix('{organization}')->name('organization.')->group(function () {
             Route::post('avatar', [OrganizationController::class, 'setAvatar'])->name('setAvatar');
             Route::delete('avatar', [OrganizationController::class, 'removeAvatar'])->name('removeAvatar');
             Route::post('delete', [OrganizationController::class, 'destroy'])->name('destroy');
 
             Route::prefix('users')->name('users.')->group(function () {
-                Route::post('{userId}/kick', [OrganizationUserController::class, 'kick'])->name('kick');
+                Route::post('{user}/kick', [OrganizationUserController::class, 'kick'])->name('kick');
             });
 
             Route::apiResource('users', OrganizationUserController::class)
@@ -51,18 +56,31 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
             // Rotas de projetos
             Route::prefix('projects')->group(function () {
-                Route::prefix('{projectId}')->group(function () {
+                Route::prefix('{project}')->group(function () {
                     Route::post('assign', [ProjectUserController::class, 'assign'])->name('projects.users.assign');
                     Route::post('unassign', [ProjectUserController::class, 'unassign'])->name('projects.users.unassign');
                     Route::post('leave', [ProjectUserController::class, 'leave'])->name('projects.leave');
 
                     Route::apiResource('users', ProjectUserController::class)
                         ->only(['index', 'show']);
+
+                    Route::prefix('tasks')->group(function () {
+                        Route::prefix('{task}')->group(function () {
+                            Route::put('status', [TaskController::class, 'updateStatus'])->name('tasks.status.update');
+                            Route::put('assignee', [TaskAssigneeController::class, 'update'])->name('tasks.assignee.update');
+                        });
+                    });
+
+                    Route::apiResource('tasks', TaskController::class);
+                    Route::apiResource('statuses', StatusController::class);
                 });
             });
 
             Route::apiResource('projects', ProjectController::class);
         });
     });
-    Route::apiResource('organizations', OrganizationController::class)->except(['destroy']);
+
+    Route::apiResource('organizations', OrganizationController::class)
+        ->except(['destroy'])
+        ->where(['organization' => '[0-9]+']);
 });

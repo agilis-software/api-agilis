@@ -52,15 +52,16 @@ class ProfileController extends Controller
         ]);
 
         $user = Auth::user();
+
+        if ($user->avatar !== config('agilis.users.avatars.default')) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
         $mediaPath = MediaService::saveMedia(
             $request->file('avatar'),
             config('agilis.users.avatars.folder'),
             $user->id
         );
-
-        if ($user->avatar !== config('agilis.users.avatars.default')) {
-            Storage::disk('public')->delete($user->avatar);
-        }
 
         $user->update([
             'avatar' => $mediaPath,
