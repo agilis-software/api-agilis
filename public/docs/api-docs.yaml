@@ -71,3 +71,9 @@ paths:
     $ref: './paths/projects/projects_[id]_assign.yaml'
   /api/organizations/{organizationId}/projects/{projectId}/unassign:
     $ref: './paths/projects/projects_[id]_unassign.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/leave:
+    $ref: './paths/projects/projects_[id]_leave.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/statuses:
+    $ref: './paths/projects/projects_[id]_statuses.yaml'
+  /api/organizations/{organizationId}/projects/{projectId}/statuses/{statusId}:
+    $ref: './paths/projects/projects_[id]_statuses_[id].yaml'

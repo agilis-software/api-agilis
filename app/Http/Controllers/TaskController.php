@@ -44,7 +44,7 @@ class TaskController extends Controller
         $project = $organization->projects()->find($projectId);
         abort_unless($project, 404, 'Not found');
 
-        $status = Status::where('name', 'TO_DO')->first();
+        $status = $project->statuses()->findOrFail($request->status_id);
 
         $task = $project->tasks()->create(array_merge($request->validated(), [
             'status_id' => $status->id,

@@ -33,7 +33,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Rotas para o recurso de usuários
     Route::apiResource('users', UserController::class)
-        ->only(['index', 'show']);
+        ->only(['index', 'show'])
+        ->where(['user' => '[0-9]+']);
+
 
     // Rotas de organizações
     Route::prefix('organizations')->name('organizations.')->group(function () {
@@ -77,5 +79,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::apiResource('projects', ProjectController::class);
         });
     });
-    Route::apiResource('organizations', OrganizationController::class)->except(['destroy']);
+
+    Route::apiResource('organizations', OrganizationController::class)
+        ->except(['destroy'])
+        ->where(['organization' => '[0-9]+']);
 });

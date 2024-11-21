@@ -25,6 +25,7 @@ class TaskStoreRequest extends FormRequest
             'title' => ['required', 'string', 'max:45'],
             'description' => ['nullable', 'string', 'max:255'],
             'due_date' => ['nullable', 'date'],
+            'status_id' => ['required', 'exists:statuses,id'],
         ];
     }
 }
