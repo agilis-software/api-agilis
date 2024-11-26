@@ -250,7 +250,8 @@ it('should not update a task when project not exists', function () {
         'status_id' => 1,
     ]);
 
-    $response->assertNotFound();
+    $response->assertStatus(422);
+    $this->assertDatabaseMissing('tasks', ['title' => 'Task 1 Updated']);
 });
 
 it('should not update a task when organization not exists', function () {
