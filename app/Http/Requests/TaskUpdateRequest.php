@@ -25,6 +25,7 @@ class TaskUpdateRequest extends FormRequest
             'title' => ['string', 'max:45', 'sometimes'],
             'description' => ['string', 'max:255', 'nullable'],
             'due_date' => ['date', 'nullable', 'sometimes'],
+            'status_id' => ['integer', 'exists:statuses,id', 'nullable', 'sometimes'],
         ];
     }
 }

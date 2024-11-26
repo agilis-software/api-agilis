@@ -1,0 +1,132 @@
+{
+  "put": {
+    "summary": "Update a task assignee",
+    "tags": [
+      "Tasks"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Organization ID"
+        }
+      },
+      {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Project ID"
+        }
+      },
+      {
+        "in": "path",
+        "name": "taskId",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Task ID"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "assignee_id": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Task assignee updated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "Task Title"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Task Description"
+                    },
+                    "status": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "DOING"
+                        },
+                        "project_id": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    },
+                    "due_date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "assignee": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "birth_date": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "1990-01-01T00:00:00.000Z"
+                        },
+                        "avatar_url": {
+                          "type": "string",
+                          "example": "http://localhost:8000/files/users/avatars/default.png"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

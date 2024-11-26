@@ -1,0 +1,167 @@
+{
+  "get": {
+    "summary": "Get a list of projects",
+    "tags": [
+      "Projects"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Organization ID"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of projects retrieved successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Project Name"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "Project Description"
+                      },
+                      "start_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000Z"
+                      },
+                      "finish_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  },
+  "post": {
+    "summary": "Create a new project",
+    "tags": [
+      "Projects"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Organization ID"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Project Name"
+              },
+              "description": {
+                "type": "string",
+                "example": "Project Description"
+              },
+              "start_date": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-01-01T00:00:00.000Z"
+              },
+              "finish_date": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-01-01T00:00:00.000Z"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Project created successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Project Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Project Description"
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-01-01T00:00:00.000Z"
+                    },
+                    "finish_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-01-01T00:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}
