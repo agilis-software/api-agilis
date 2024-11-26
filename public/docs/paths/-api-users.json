@@ -1,0 +1,55 @@
+{
+  "get": {
+    "summary": "Get a list of users",
+    "tags": [
+      "Users"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of users retrieved successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                      },
+                      "birth_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "1990-01-01T00:00:00.000Z"
+                      },
+                      "avatar_url": {
+                        "type": "string",
+                        "example": "http://localhost:8000/storage/avatars/default.png"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}

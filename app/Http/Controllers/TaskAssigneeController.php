@@ -29,6 +29,8 @@ class TaskAssigneeController extends Controller
 
         $task->save();
 
-        return new TaskResource($task);
+        return (new TaskResource($task))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 }

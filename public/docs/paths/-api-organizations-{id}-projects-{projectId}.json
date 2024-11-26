@@ -1,0 +1,221 @@
+{
+  "get": {
+    "summary": "Get a project by ID",
+    "tags": [
+      "Projects"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Organization ID"
+      },
+      {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Project ID"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Project retrieved successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Project Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Project Description"
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-01-01T00:00:00.000Z"
+                    },
+                    "finish_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-01-01T00:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  },
+  "put": {
+    "summary": "Update a project by ID",
+    "tags": [
+      "Projects"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Organization ID"
+      },
+      {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Project ID"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Project Name"
+              },
+              "description": {
+                "type": "string",
+                "example": "Project Description"
+              },
+              "start_date": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-01-01T00:00:00.000Z"
+              },
+              "finish_date": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-01-01T00:00:00.000Z"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Project updated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Project Name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Project Description"
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-01-01T00:00:00.000Z"
+                    },
+                    "finish_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-01-01T00:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  },
+  "delete": {
+    "summary": "Delete a project by ID",
+    "tags": [
+      "Projects"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Organization ID"
+      },
+      {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "Project ID"
+      }
+    ],
+    "responses": {
+      "204": {
+        "description": "Project deleted successfully, no content"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}

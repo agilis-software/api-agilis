@@ -1,0 +1,44 @@
+{
+  "post": {
+    "summary": "Leave project",
+    "tags": [
+      "Projects"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Organization ID"
+      },
+      {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Project ID"
+      }
+    ],
+    "responses": {
+      "204": {
+        "description": "No content"
+      },
+      "400": {
+        "description": "Bad request"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}

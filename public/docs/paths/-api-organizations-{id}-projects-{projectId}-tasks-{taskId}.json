@@ -1,0 +1,328 @@
+{
+  "get": {
+    "summary": "Get a task by ID",
+    "tags": [
+      "Tasks"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Organization ID"
+        }
+      },
+      {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Project ID"
+        }
+      },
+      {
+        "in": "path",
+        "name": "taskId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Task ID"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Task retrieved successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "Task Title"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Task Description"
+                    },
+                    "status": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "DOING"
+                        },
+                        "project_id": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    },
+                    "due_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2024-12-30T00:00:00.000Z"
+                    },
+                    "project_id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "assignee": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "birth_date": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "1990-01-01T00:00:00.000Z"
+                        },
+                        "avatar_url": {
+                          "type": "string",
+                          "example": "http://localhost:8000/files/users/avatars/default.png"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  },
+  "put": {
+    "summary": "Update a task by ID",
+    "tags": [
+      "Tasks"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Organization ID"
+        }
+      },
+      {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Project ID"
+        }
+      },
+      {
+        "in": "path",
+        "name": "taskId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Task ID"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "example": "Task Title"
+              },
+              "description": {
+                "type": "string",
+                "example": "Task Description"
+              },
+              "status_id": {
+                "type": "integer",
+                "example": 1
+              },
+              "due_date": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2024-12-30T00:00:00.000Z"
+              },
+              "project_id": {
+                "type": "integer",
+                "example": 1
+              },
+              "assignee_id": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Task updated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "Task Title"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Task Description"
+                    },
+                    "status": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "DOING"
+                        },
+                        "project_id": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    },
+                    "due_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2024-12-30T00:00:00.000Z"
+                    },
+                    "project_id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "assignee": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "birth_date": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "1990-01-01T00:00:00.000Z"
+                        },
+                        "avatar_url": {
+                          "type": "string",
+                          "example": "http://localhost:8000/files/users/avatars/default.png"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "delete": {
+    "summary": "Delete a task by ID",
+    "tags": [
+      "Tasks"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Organization ID"
+        }
+      },
+      {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Project ID"
+        }
+      },
+      {
+        "in": "path",
+        "name": "taskId",
+        "schema": {
+          "type": "integer",
+          "description": "Task ID"
+        },
+        "required": true
+      }
+    ],
+    "responses": {
+      "204": {
+        "description": "Task deleted successfully"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}

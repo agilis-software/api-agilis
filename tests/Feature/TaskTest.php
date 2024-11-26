@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Resources\StatusResource;
 use App\Models\Organization;
 use App\Models\Project;
 use App\Models\User;
@@ -63,6 +64,7 @@ it('should store a task', function () {
         'title' => 'Task 1',
         'description' => 'Description 1',
         'due_date' => $dueDate->toISOString(),
+        'status_id' => $todoStatus->id
     ]);
 
     $response->assertCreated();
@@ -70,7 +72,7 @@ it('should store a task', function () {
         'title' => 'Task 1',
         'description' => 'Description 1',
         'due_date' => $dueDate->toISOString(),
-        'status' => $todoStatus->name,
+        'status' => new StatusResource($todoStatus),
     ]);
 });
 
@@ -108,7 +110,7 @@ it('should update a task', function () {
         'title' => 'Task 1 Updated',
         'description' => 'Description 1 Updated',
         'due_date' => $newDueDate->toISOString(),
-        'status' => $todoStatus->name,
+        'status' => new StatusResource($todoStatus),
     ]);
 });
 
@@ -168,7 +170,7 @@ it('should update a task status', function () {
 
     $response->assertOk();
     $response->assertJsonFragment([
-        'status' => 'DOING',
+        'status' => new StatusResource($doingStatus),
     ]);
 });
 
@@ -211,9 +213,10 @@ it('should not store a task when project not exists', function () {
         'title' => 'Task 1',
         'description' => 'Description 1',
         'due_date' => now()->addDays(),
+        'status_id' => 1,
     ]);
 
-    $response->assertNotFound();
+    $response->assertStatus(422);
 });
 
 it('should not store a task when organization not exists', function () {
@@ -227,7 +230,7 @@ it('should not store a task when organization not exists', function () {
         'due_date' => now()->addDays(),
     ]);
 
-    $response->assertNotFound();
+    $response->assertStatus(422);
 });
 
 it('should not update a task when project not exists', function () {

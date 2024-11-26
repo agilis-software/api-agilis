@@ -1,0 +1,52 @@
+{
+  "post": {
+    "summary": "Add a member to the organization",
+    "tags": [
+      "Organizations"
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "The email of the user to add",
+                "example": "johndoe@email.com"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Member added successfully"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "422": {
+        "description": "Validation error"
+      }
+    }
+  }
+}

@@ -50,14 +50,18 @@ class TaskController extends Controller
             'status_id' => $status->id,
         ]));
 
-        return new TaskResource($task);
+        return (new TaskResource($task))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     public function show(int $organizationId, int $projectId, int $taskId)
     {
         $task = $this->getTask($organizationId, $projectId, $taskId);
 
-        return new TaskResource($task);
+        return (new TaskResource($task))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     public function update(TaskUpdateRequest $request, int $organizationId, int $projectId, int $taskId)
@@ -70,7 +74,9 @@ class TaskController extends Controller
 
         $task->update($request->validated());
 
-        return new TaskResource($task);
+        return (new TaskResource($task))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     public function destroy(int $organizationId, int $projectId, int $taskId)
@@ -98,7 +104,9 @@ class TaskController extends Controller
 
         $task->update(['status_id' => $status->id]);
 
-        return new TaskResource($task);
+        return (new TaskResource($task))
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     /**
