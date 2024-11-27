@@ -6,6 +6,7 @@ use App\Http\Requests\OrganizationInviteRequest;
 use App\Http\Resources\OrganizationMemberResource;
 use App\Http\Resources\OrganizationResource;
 use App\Models\Organization;
+use App\Models\User;
 use App\Rules\OrganizationOwnerRule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -15,7 +16,7 @@ class OrganizationUserController extends Controller
     public function index(int $id)
     {
         $user = Auth::user();
-        $organization = $user->organizations->find($id);
+        $organization = $user->organizations()->find($id);
 
         abort_unless($organization, 404, 'Organization not found');
 
@@ -30,7 +31,7 @@ class OrganizationUserController extends Controller
     public function show(int $id, int $userId)
     {
         $user = Auth::user();
-        $organization = $user->organizations->find($id);
+        $organization = $user->organizations()->find($id);
 
         abort_unless($organization, 404, 'Organization not found');
 
@@ -54,7 +55,7 @@ class OrganizationUserController extends Controller
 
         abort_if($emailExists, 422, 'User already in organization');
 
-        $user = Auth::user()->where('email', $data['email'])->firstOrFail();
+        $user = User::where('email', $data['email'])->firstOrFail();
 
         $organization->users()->attach($user->id);
 

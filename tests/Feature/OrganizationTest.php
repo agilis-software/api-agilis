@@ -88,12 +88,16 @@ it('fails to set the organization avatar when the user is not the owner', functi
 it('retrieves a list of organizations successfully', function () {
     $user = User::factory()->create();
     Sanctum::actingAs($user);
-    Organization::factory()->count(5)->create();
+    $organization = Organization::factory()->create();
+    $organization2 = Organization::factory()->create();
+
+    $organization->users()->attach($user->id);
+    $organization2->users()->attach($user->id);
 
     $response = $this->getJson('/api/organizations');
 
     $response->assertStatus(200)
-        ->assertJsonCount(5, 'data');
+        ->assertJsonCount(2, 'data');
 });
 
 it('retrieves a specific organization successfully', function () {
