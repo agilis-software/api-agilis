@@ -17,7 +17,9 @@ class OrganizationController extends Controller
 {
     public function index()
     {
-        return OrganizationResource::collection(Organization::paginate(5))
+        $user = Auth::user();
+        $organizations = $user->organizations()->paginate(10);
+        return OrganizationResource::collection($organizations)
             ->response()
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
