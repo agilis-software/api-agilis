@@ -13,4 +13,8 @@ return [
             'default' => 'organizations/avatars/default.png',
         ],
     ],
+
+    'chat' => [
+        'secret' => env('CHAT_SERVER_SECRET', 'API_SECRET'),
+    ],
 ];

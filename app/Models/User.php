@@ -68,6 +68,11 @@ class User extends Authenticatable
         return $this->hasMany(Message::class, 'author_id');
     }
 
+    public function directMessages()
+    {
+        return $this->hasMany(DirectMessage::class, 'sender_id');
+    }
+
     public function tasks()
     {
         return $this->hasMany(Task::class, 'assignee_id');

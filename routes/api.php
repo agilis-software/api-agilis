@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DirectMessageController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationUserController;
 use App\Http\Controllers\ProfileController;
@@ -83,4 +84,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('organizations', OrganizationController::class)
         ->except(['destroy'])
         ->where(['organization' => '[0-9]+']);
+
+    Route::get('dm/{user}', [DirectMessageController::class, 'index']);
+    Route::post('dm/{user}', [DirectMessageController::class, 'store']);
 });
