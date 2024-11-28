@@ -1,0 +1,211 @@
+{
+    "get": {
+        "summary": "List all direct messages with a user",
+        "tags": [
+            "Direct Messages"
+        ],
+        "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "The ID of the user to list direct messages with",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            }
+        ],
+        "security": [
+            {
+                "bearerAuth": []
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "List of direct messages with a user",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "content": {
+                                                "type": "string",
+                                                "example": "Hello, world!"
+                                            },
+                                            "sender": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "John Doe"
+                                                    },
+                                                    "birth_date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2000-01-01"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "example": "http://localhost:8000/files/users/avatars/1.jpg"
+                                                    }
+                                                }
+                                            },
+                                            "receiver": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Jane Doe"
+                                                    },
+                                                    "birth_date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2001-01-01"
+                                                    },
+                                                    "avatar_url": {
+                                                        "type": "string",
+                                                        "format": "uri",
+                                                        "example": "http://localhost:8000/files/users/avatars/2.jpg"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "post": {
+        "summary": "Send a direct message to a user",
+        "tags": [
+            "Direct Messages"
+        ],
+        "parameters": [
+            {
+                "name": "id",
+                "in": "path",
+                "description": "The ID of the user to send a direct message to",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            }
+        ],
+        "security": [
+            {
+                "bearerAuth": []
+            }
+        ],
+        "requestBody": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "content": {
+                                "type": "string",
+                                "description": "The content of the direct message"
+                            }
+                        }
+                    }
+                },
+                "required": true
+            }
+        },
+        "responses": {
+            "201": {
+                "description": "Direct message sent",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Hello, world!"
+                                        },
+                                        "sender": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "birth_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2000-01-01"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string",
+                                                    "format": "uri",
+                                                    "example": "http://localhost:8000/files/users/avatars/1.jpg"
+                                                }
+                                            }
+                                        },
+                                        "receiver": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Jane Doe"
+                                                },
+                                                "birth_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2001-01-01"
+                                                },
+                                                "avatar_url": {
+                                                    "type": "string",
+                                                    "format": "uri",
+                                                    "example": "http://localhost:8000/files/users/avatars/2.jpg"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
