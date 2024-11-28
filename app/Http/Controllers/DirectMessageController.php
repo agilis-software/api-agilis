@@ -25,7 +25,9 @@ class DirectMessageController extends Controller
             ->orWhere('sender_id', $receiver->id)
             ->get();
 
-        return DirectMessageResource::collection($messages);
+        return DirectMessageResource::collection($messages)
+                ->response()
+                ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
     public function store(DirectMessageSendRequest $request, $userId)
@@ -45,14 +47,11 @@ class DirectMessageController extends Controller
         $client = new Client();
         $chatSecret = config('agilis.chat.secret');
 
-        $response = $client->post('http://localhost:8003/chat/messages', [
+        $json = (new DirectMessageResource($message))->toArray($request);
+
+        $client->post('http://localhost:8003/chat/messages', [
             'json' => [
-                'message' => [
-                    'from' => $user->id,
-                    'to' => $receiver->id,
-                    'content' => $request->get('content'),
-                    'timestamp' => $message->created_at->timestamp,
-                ]
+                'data' => $json
             ],
             'headers' => [
                 'Authorization' => "Api $chatSecret"
