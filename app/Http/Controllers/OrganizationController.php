@@ -15,11 +15,18 @@ use Illuminate\Support\Facades\Validator;
 
 class OrganizationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $organizations = $user->organizations()->paginate(10);
-        return OrganizationResource::collection($organizations)
+
+        $filter = $request->query('filter', 'all');
+
+        $organizations = match ($filter) {
+            'own' => $user->ownOrganizations(),
+            default => $user->organizations(),
+        };
+
+        return OrganizationResource::collection($organizations->paginate(10))
             ->response()
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
