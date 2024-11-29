@@ -39,6 +39,8 @@ class ProjectController extends Controller
         $project = $organization->projects()
             ->create($data);
 
+        $project->users()->attach($user);
+
         return (new ProjectResource($project))
             ->response()
             ->setStatusCode(201)
