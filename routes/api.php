@@ -56,8 +56,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('leave', [OrganizationUserController::class, 'leave'])->name('leave');
 
             // Rotas de projetos
-            Route::prefix('projects')->group(function () {
-                Route::prefix('{project}')->group(function () {
+            Route::prefix('projects')->name('projects.')->group(function () {
+                Route::prefix('{project}')->name('project.')->group(function () {
                     Route::post('assign', [ProjectUserController::class, 'assign'])->name('projects.users.assign');
                     Route::post('unassign', [ProjectUserController::class, 'unassign'])->name('projects.users.unassign');
                     Route::post('leave', [ProjectUserController::class, 'leave'])->name('projects.leave');
