@@ -46,6 +46,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('delete', [OrganizationController::class, 'destroy'])->name('destroy');
 
             Route::prefix('users')->name('users.')->group(function () {
+                Route::get('{user}/tasks', [TaskController::class, 'getAssignedToOrganizationUser'])->name('tasks');
                 Route::post('{user}/kick', [OrganizationUserController::class, 'kick'])->name('kick');
             });
 
