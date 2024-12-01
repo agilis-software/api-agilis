@@ -62,6 +62,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
                     Route::post('unassign', [ProjectUserController::class, 'unassign'])->name('projects.users.unassign');
                     Route::post('leave', [ProjectUserController::class, 'leave'])->name('projects.leave');
 
+                    Route::prefix('users')->name('users.')->group(function () {
+                        Route::get('{user}/tasks', [TaskController::class, 'getAssignedToUser'])->name('tasks');
+                    });
+
                     Route::apiResource('users', ProjectUserController::class)
                         ->only(['index', 'show']);
 
