@@ -109,6 +109,26 @@ class TaskController extends Controller
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }
 
+    public function getAssignedToUser(int $organizationId, int $projectId, int $userId)
+    {
+        $me = Auth::user();
+
+        $organization = $me->organizations()->find($organizationId);
+        abort_unless($organization, 404, 'Not found');
+
+        $project = $organization->projects()->find($projectId);
+        abort_unless($project, 404, 'Not found');
+
+        $user = $project->users()->find($userId);
+        abort_unless($user, 404, 'Not found');
+
+        $tasks = $user->tasks()->where('project_id', $project->id)->get();
+
+        return TaskResource::collection($tasks)
+            ->response()
+            ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
+    }
+
     /**
      * @return mixed
      */
