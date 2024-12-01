@@ -114,7 +114,7 @@ class TaskController extends Controller
         $me = Auth::user();
 
         $organization = $me->organizations()->find($organizationId);
-        abort_unless($organization, 404, 'Organization not found');
+        abort_unless($organization, 404, 'Organization not found.');
 
         $project = $organization->projects()->find($projectId);
         abort_unless($project, 404, 'Project not found');
