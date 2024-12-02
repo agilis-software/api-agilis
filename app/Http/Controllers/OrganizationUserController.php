@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrganizationInviteRequest;
 use App\Http\Resources\OrganizationMemberResource;
 use App\Http\Resources\OrganizationResource;
+use App\Http\Resources\UserResource;
 use App\Models\Organization;
 use App\Models\User;
 use App\Rules\OrganizationOwnerRule;
@@ -59,7 +60,7 @@ class OrganizationUserController extends Controller
 
         $organization->users()->attach($user->id);
 
-        return (new OrganizationResource($organization))
+        return (new UserResource($user))
             ->response()
             ->setEncodingOptions(JSON_UNESCAPED_SLASHES);
     }

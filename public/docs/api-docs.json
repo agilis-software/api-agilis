@@ -99,6 +99,9 @@
         "/api/organizations/{id}/users/{userId}/kick": {
             "$ref": "./paths/-api-organizations-{id}-users-{userId}-kick.json"
         },
+        "/api/organizations/{id}/users/{userId}/tasks": {
+            "$ref": "./paths/-api-organizations-{id}-users-{userId}-tasks.json"
+        },
         "/api/organizations/{id}/projects": {
             "$ref": "./paths/-api-organizations-{id}-projects.json"
         },
@@ -110,6 +113,9 @@
         },
         "/api/organizations/{id}/projects/{projectId}/users/{userId}": {
             "$ref": "./paths/-api-organizations-{id}-projects-{projectId}-users-{userId}.json"
+        },
+        "/api/organizations/{id}/projects/{projectId}/users/{userId}/tasks": {
+            "$ref": "./paths/-api-organizations-{id}-projects-{projectId}-users-{userId}-tasks.json"
         },
         "/api/organizations/{id}/projects/{projectId}/assign": {
             "$ref": "./paths/-api-organizations-{id}-projects-{projectId}-assign.json"

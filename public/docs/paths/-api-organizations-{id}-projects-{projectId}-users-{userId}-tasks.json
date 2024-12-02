@@ -1,0 +1,99 @@
+{
+	"get": {
+		"summary": "Lists all tasks of a user in a project",
+		"tags": [
+			"Projects"
+		],
+		"security": [
+			{
+				"bearerAuth": []
+			}
+		],
+		"parameters": [
+			{
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"description": "Organization ID"
+			},
+			{
+				"in": "path",
+				"name": "projectId",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"description": "Project ID"
+			},
+			{
+				"in": "path",
+				"name": "userId",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"description": "User ID"
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "List of tasks retrieved successfully",
+				"content": {
+					"application/json": {
+						"schema": {
+							"type": "object",
+							"properties": {
+								"data": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer",
+												"example": 1
+											},
+											"title": {
+												"type": "string",
+												"example": "Task Title"
+											},
+											"description": {
+												"type": "string",
+												"example": "Task Description"
+											},
+											"status": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "integer",
+														"example": 1
+													},
+													"name": {
+														"type": "string",
+														"example": "DOING",
+														"project_id": {
+															"type": "integer",
+															"example": 1
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"404": {
+				"description": "Organization, project or user not found"
+			},
+			"401": {
+				"description": "Unauthorized"
+			}
+		}
+	}
+}
